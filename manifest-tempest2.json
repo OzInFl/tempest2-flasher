@@ -1,0 +1,13 @@
+{
+  "name": "TEMPEST 2 (M5Stack Core2 for AWS v1.3)",
+  "version": "0.92",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "firmware/tempest2-core2-v0.92.factory.bin", "offset": 0 }
+      ]
+    }
+  ]
+}

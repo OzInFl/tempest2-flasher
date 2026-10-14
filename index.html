@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TEMPEST 2 Flasher</title>
+<meta name="description" content="Flash TEMPEST 2 (M5Stack Core2 for AWS v1.3) firmware from your browser over USB, plus SD card setup and troubleshooting." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#080b10; --panel:#12171f; --panel2:#161c26;
+    --edge:#1f2733; --edge-hi:#2b3646;
+    --text:#e8eef5; --text-dim:#8b97a6; --text-mut:#5c6675;
+    --green:#3FB950; --cyan:#39C5CF; --magenta:#BC8CFF; --amber:#E8B020; --danger:#F85149;
+    --font:'Montserrat',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:var(--font); color:var(--text); background:var(--void);
+    background-image:
+      radial-gradient(1100px 620px at 50% -8%, rgba(232,176,32,.10), transparent 60%),
+      radial-gradient(900px 520px at 88% 12%, rgba(57,197,207,.08), transparent 55%);
+    min-height:100vh; line-height:1.55; letter-spacing:.2px;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 16px}
+  a{color:var(--cyan)}
+  code{font-family:var(--mono); font-size:.92em; background:rgba(255,255,255,.06); border:1px solid var(--edge); border-radius:5px; padding:1px 6px; overflow-wrap:anywhere}
+
+  header{padding:52px 0 26px; text-align:center}
+  .kicker{font-size:12px; font-weight:700; letter-spacing:5px; text-transform:uppercase; color:var(--amber); margin-bottom:14px}
+  h1{font-size:clamp(32px,7vw,56px); font-weight:900; letter-spacing:2px; line-height:1.05; text-wrap:balance}
+  h1 .hl{background:linear-gradient(100deg,var(--amber),var(--cyan)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .subtitle{margin:16px auto 0; max-width:580px; color:var(--text-dim); font-size:clamp(15px,2.4vw,17px); font-weight:500}
+
+  .req{margin:26px auto 4px; display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
+  .chip{display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:var(--text-dim);
+        background:var(--panel); border:1px solid var(--edge); border-radius:999px; padding:8px 14px}
+  .chip b{color:var(--text)}
+  .dot{width:7px;height:7px;border-radius:50%;flex:none}
+
+  .card{position:relative; margin:30px 0 0; background:linear-gradient(180deg,var(--panel2),var(--panel));
+        border:1px solid var(--edge); border-radius:16px; padding:26px 24px 24px; overflow:hidden; --accent:var(--amber)}
+  .card::before{content:""; position:absolute; inset:0 0 auto 0; height:3px; background:var(--accent); box-shadow:0 0 16px 1px var(--accent)}
+  .card-grid{display:grid; grid-template-columns:1fr minmax(240px,300px); gap:24px; align-items:end}
+  .badge{display:inline-block; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent);
+         border:1px solid color-mix(in srgb,var(--accent) 40%,transparent); background:color-mix(in srgb,var(--accent) 12%,transparent);
+         border-radius:6px; padding:4px 9px; margin-bottom:14px}
+  .card h2{font-size:24px; font-weight:800}
+  .role{color:var(--text-dim); font-size:14.5px; font-weight:500; margin-top:6px}
+  .meta{display:flex; flex-wrap:wrap; gap:18px; margin-top:16px; padding-top:16px; border-top:1px solid var(--edge); font-size:12.5px}
+  .meta div{display:flex; flex-direction:column; gap:3px}
+  .lbl{color:var(--text-mut); font-weight:600; letter-spacing:.6px; text-transform:uppercase; font-size:10.5px}
+  .val{color:var(--text); font-weight:700; font-variant-numeric:tabular-nums}
+
+  .flash-btn{width:100%; font-family:var(--font); font-size:16px; font-weight:800; letter-spacing:.5px; color:#140f02; cursor:pointer;
+             border:0; border-radius:11px; padding:16px 18px;
+             background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 88%,white),var(--accent));
+             box-shadow:0 6px 18px -6px var(--accent), inset 0 1px 0 rgba(255,255,255,.35); transition:transform .08s ease, box-shadow .15s ease}
+  .flash-btn:hover{transform:translateY(-1px); box-shadow:0 10px 24px -8px var(--accent)}
+  .flash-btn:focus-visible{outline:2px solid var(--text); outline-offset:3px}
+  .msg{display:block; font-size:12.5px; margin-top:10px; text-align:center; font-weight:600; color:var(--danger)}
+  .alt{display:block; text-align:center; font-size:12.5px; color:var(--text-mut); margin-top:10px}
+
+  .panel{margin:22px 0 0; background:var(--panel); border:1px solid var(--edge); border-radius:16px; padding:24px 24px 20px}
+  .panel h3{font-size:15px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--cyan); margin-bottom:14px}
+  .panel.warn h3{color:var(--amber)}
+  .steps{display:grid; gap:12px}
+  .step{display:grid; grid-template-columns:30px 1fr; gap:12px; align-items:start}
+  .n{width:30px; height:30px; border-radius:50%; display:grid; place-items:center; font-weight:800; font-size:13px;
+     color:var(--cyan); border:1px solid color-mix(in srgb,var(--cyan) 45%,transparent); background:color-mix(in srgb,var(--cyan) 10%,transparent)}
+  .panel.warn .n{color:var(--amber); border-color:color-mix(in srgb,var(--amber) 45%,transparent); background:color-mix(in srgb,var(--amber) 10%,transparent)}
+  .step p, .panel > p{color:var(--text-dim); font-size:14.5px}
+  .step b, .panel b{color:var(--text)}
+  .note{margin-top:16px; padding-top:14px; border-top:1px solid var(--edge); font-size:13.5px; color:var(--text-dim)}
+
+  .tree{font-family:var(--mono); font-size:13.5px; line-height:1.7; background:#0b0f15; border:1px solid var(--edge); border-radius:10px;
+        padding:14px 16px; margin:12px 0 4px; color:var(--text); overflow-x:auto; white-space:pre}
+  .tree .c{color:var(--text-mut)}
+  table{width:100%; border-collapse:collapse; font-size:14px; margin-top:6px}
+  th,td{text-align:left; padding:10px 8px; border-top:1px solid var(--edge); vertical-align:top}
+  th{color:var(--text-mut); font-size:11px; letter-spacing:.8px; text-transform:uppercase; font-weight:700; border-top:0}
+  td{color:var(--text-dim)}
+  td:first-child{color:var(--text); font-weight:700; white-space:nowrap}
+
+  footer{padding:30px 0 40px; text-align:center; color:var(--text-mut); font-size:12.5px}
+  footer a{color:var(--text-dim)}
+
+  @media (max-width:640px){
+    header{padding-top:36px}
+    .card-grid{grid-template-columns:1fr}
+    .card,.panel{padding:20px 16px}
+    td:first-child{white-space:normal}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">Firmware Flasher</div>
+    <h1><span class="hl">TEMPEST 2</span></h1>
+    <p class="subtitle">Install the latest TEMPEST 2 firmware straight from this page over USB.
+      Plug in, click flash, and the unit restarts on the new version.</p>
+  </header>
+
+  <div class="req">
+    <span class="chip"><span class="dot" style="background:var(--green)"></span>Use <b>Chrome</b> or <b>Edge</b> on a computer</span>
+    <span class="chip"><span class="dot" style="background:var(--cyan)"></span><b>USB-C data</b> cable</span>
+    <span class="chip"><span class="dot" style="background:var(--amber)"></span>Close other <b>serial apps</b> first</span>
+  </div>
+
+  <section class="card" aria-labelledby="dev">
+    <div class="card-grid">
+      <div>
+        <span class="badge">M5Stack Core2 for AWS v1.3</span>
+        <h2 id="dev">TEMPEST 2</h2>
+        <p class="role">Environmental monitor, NRG word engine, 4.4K real-speech playback and EMF meter.</p>
+        <div class="meta">
+          <div><span class="lbl">Firmware</span><span class="val">v0.92</span></div>
+          <div><span class="lbl">Chip</span><span class="val">ESP32</span></div>
+          <div><span class="lbl">Hardware</span><span class="val">Core2 AWS v1.3</span></div>
+        </div>
+      </div>
+      <div>
+        <esp-web-install-button manifest="manifest-tempest2.json">
+          <button class="flash-btn" slot="activate">Flash TEMPEST 2</button>
+          <span slot="unsupported" class="msg">This browser can't flash. Use Chrome or Edge on a computer.</span>
+          <span slot="not-allowed" class="msg">This page must be opened over HTTPS.</span>
+        </esp-web-install-button>
+        <span class="alt">No Chrome or Edge? Use the <a href="#sd-update">SD card update</a> instead.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="how">
+    <h3 id="how">How to flash</h3>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><p>Open this page in <b>Chrome</b> or <b>Edge</b> on a Windows, Mac or Linux computer. Phones and tablets can't flash.</p></div>
+      <div class="step"><div class="n">2</div><p>Turn the TEMPEST on and plug it into the computer with a USB-C cable that carries <b>data</b>, not a charge-only cable.</p></div>
+      <div class="step"><div class="n">3</div><p>Click <b>Flash TEMPEST 2</b>, choose the port in the browser's pop-up (it's usually named <b>CP210x</b>, <b>USB Serial</b> or <b>CH9102</b>), then click <b>Install</b>.</p></div>
+      <div class="step"><div class="n">4</div><p>Wait for it to finish, about a minute. Don't unplug it until it says it's done. The unit restarts by itself, and the splash screen shows <b>0.92</b>.</p></div>
+    </div>
+    <p class="note"><b>No port in the list?</b> Windows may need the USB driver for the TEMPEST's USB chip. Install the
+      <a href="https://www.silabs.com/developer-tools/usb-to-uart-bridge-vcp-drivers" target="_blank" rel="noopener">CP210x driver</a> or the
+      <a href="https://www.wch-ic.com/downloads/CH343SER_EXE.html" target="_blank" rel="noopener">CH9102 driver</a> (installing both is fine), then unplug and replug.
+      Also close Arduino, PlatformIO or any other program that might be holding the port, and try another cable or USB port.</p>
+  </section>
+
+  <section class="panel warn" aria-labelledby="sd">
+    <h3 id="sd">SD card problems</h3>
+    <p>The SD card holds the custom word list and the 4.4K real-speech recordings. If the TEMPEST shows
+      <b>NO SD CARD MOUNTED</b>, says <b>SD LIBRARY NOT FOUND</b>, or the 4.4K Real Speech mode stays silent,
+      the card is almost always the cause.</p>
+    <p style="margin-top:10px"><b>Generic, no-brand microSD cards are known to fail in the TEMPEST 2.</b>
+      They work for a moment after power-on, then stop responding once the screen is in use.
+      Reflashing the firmware won't fix that; a different card will.</p>
+
+    <div class="steps" style="margin-top:18px">
+      <div class="step"><div class="n">1</div><p>Use a name-brand microSD card: <b>SanDisk</b>, <b>Samsung</b> or <b>Kingston</b>. <b>32 GB or smaller</b> is easiest.</p></div>
+      <div class="step"><div class="n">2</div><p>Format it as <b>FAT32</b>. exFAT, the usual format for 64 GB and larger cards, won't work. On Windows, cards over 32 GB can be formatted FAT32 from a command prompt, for example: <code>format X: /FS:FAT32 /Q /V:TEMPEST</code>, where <code>X:</code> is the card's drive letter.</p></div>
+      <div class="step"><div class="n">3</div><p>Copy the TEMPEST files supplied with your unit to the card, laid out like this:</p></div>
+    </div>
+    <div class="tree">customwords.txt      <span class="c">custom word list (Custom SD mode)</span>
+af/                  <span class="c">4.4K real-speech recordings</span>
+  1.wav
+  2.wav
+  …
+  4409.wav
+TEMPESTdata.txt      <span class="c">created by the TEMPEST, your session log</span></div>
+    <div class="steps" style="margin-top:14px">
+      <div class="step"><div class="n">4</div><p>With the TEMPEST off, push the card fully into the slot until it clicks. Then turn it on.</p></div>
+      <div class="step"><div class="n">5</div><p>To check it: go to NRG Speech, switch to <b>Custom SD</b> and then <b>4.4K Real Speech</b>, and move between screens for a minute. Words should keep appearing and playing.</p></div>
+    </div>
+
+    <table aria-label="SD card messages">
+      <thead><tr><th>Message</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>NO SD CARD MOUNTED</td><td>No card found, or the card isn't responding. Reseat it; if it keeps happening, replace it with a name-brand card.</td></tr>
+        <tr><td>SD LIBRARY NOT FOUND</td><td>The card works, but <code>customwords.txt</code> isn't in its top level.</td></tr>
+        <tr><td>4.4K speech silent</td><td>The <code>af</code> folder is missing or misnamed, or the card isn't responding.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel" id="sd-update" aria-labelledby="sdu">
+    <h3 id="sdu">Alternative: update from the SD card</h3>
+    <p>If you can't use Chrome or Edge, the TEMPEST can update itself from its SD card. This needs a working card (see above).</p>
+    <div class="steps" style="margin-top:14px">
+      <div class="step"><div class="n">1</div><p>Download <a href="firmware/firmware.bin" download>firmware.bin</a> (v0.92, 1.6 MB).</p></div>
+      <div class="step"><div class="n">2</div><p>Copy it to the top level of the SD card, keeping the name <code>firmware.bin</code>.</p></div>
+      <div class="step"><div class="n">3</div><p>Put the card in the TEMPEST and turn it on. A blue <b>Updating Tempest Firmware</b> screen appears. <b>Don't power off.</b> When it finishes it deletes <code>firmware.bin</code> from the card. Restart the unit, and the splash screen shows <b>0.92</b>.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    TEMPEST 2 · firmware v0.92 for M5Stack Core2 for AWS v1.3<br />
+    Flashing powered by <a href="https://esphome.github.io/esp-web-tools/" target="_blank" rel="noopener">ESP Web Tools</a>
+  </footer>
+
+</div>
+<script type="module" src="https://cdn.jsdelivr.net/npm/esp-web-tools@10.4.0/dist/web/install-button.js"></script>
+</body>
+</html>
