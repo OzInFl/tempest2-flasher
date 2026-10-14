@@ -61,6 +61,8 @@
              border:0; border-radius:11px; padding:16px 18px;
              background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 88%,white),var(--accent));
              box-shadow:0 6px 18px -6px var(--accent), inset 0 1px 0 rgba(255,255,255,.35); transition:transform .08s ease, box-shadow .15s ease}
+  .card.sdcard{--accent:var(--cyan)}
+  a.flash-btn{display:block; text-align:center; text-decoration:none; color:#041417}
   .flash-btn:hover{transform:translateY(-1px); box-shadow:0 10px 24px -8px var(--accent)}
   .flash-btn:focus-visible{outline:2px solid var(--text); outline-offset:3px}
   .msg{display:block; font-size:12.5px; margin-top:10px; text-align:center; font-weight:600; color:var(--danger)}
@@ -136,6 +138,25 @@
     </div>
   </section>
 
+  <section class="card sdcard" aria-labelledby="sdf">
+    <div class="card-grid">
+      <div>
+        <span class="badge">SD card files</span>
+        <h2 id="sdf">Word list &amp; speech recordings</h2>
+        <p class="role">Everything that goes on the TEMPEST's microSD card: the custom word list and the 4,409
+          recordings used by 4.4K Real Speech. Unzip it onto a FAT32 card (see <a href="#sd">SD card setup</a> below).</p>
+        <div class="meta">
+          <div><span class="lbl">Download</span><span class="val">222 MB zip</span></div>
+          <div><span class="lbl">Contains</span><span class="val">customwords.txt + af folder</span></div>
+        </div>
+      </div>
+      <div>
+        <a class="flash-btn dl" href="https://github.com/OzInFl/tempest2-flasher/releases/download/sd-files-v1/tempest2-sd-card-files.zip" download>Download SD card files</a>
+        <span class="alt">Open the zip and copy everything inside it to the card.</span>
+      </div>
+    </div>
+  </section>
+
   <section class="panel" aria-labelledby="how">
     <h3 id="how">How to flash</h3>
     <div class="steps">
@@ -151,7 +172,7 @@
   </section>
 
   <section class="panel warn" aria-labelledby="sd">
-    <h3 id="sd">SD card problems</h3>
+    <h3 id="sd">SD card setup &amp; problems</h3>
     <p>The SD card holds the custom word list and the 4.4K real-speech recordings. If the TEMPEST shows
       <b>NO SD CARD MOUNTED</b>, says <b>SD LIBRARY NOT FOUND</b>, or the 4.4K Real Speech mode stays silent,
       the card is almost always the cause.</p>
