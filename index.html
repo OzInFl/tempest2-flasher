@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>TEMPEST 2 Flasher</title>
-<meta name="description" content="Flash TEMPEST 2 (M5Stack Core2 for AWS v1.3) firmware from your browser over USB, plus SD card setup and troubleshooting." />
+<meta name="description" content="Update TEMPEST 2 firmware from your browser over USB, and set up its SD card." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -117,13 +117,12 @@
   <section class="card" aria-labelledby="dev">
     <div class="card-grid">
       <div>
-        <span class="badge">M5Stack Core2 for AWS v1.3</span>
+        <span class="badge">Firmware update</span>
         <h2 id="dev">TEMPEST 2</h2>
         <p class="role">Environmental monitor, NRG word engine, 4.4K real-speech playback and EMF meter.</p>
         <div class="meta">
           <div><span class="lbl">Firmware</span><span class="val">v0.92</span></div>
-          <div><span class="lbl">Chip</span><span class="val">ESP32</span></div>
-          <div><span class="lbl">Hardware</span><span class="val">Core2 AWS v1.3</span></div>
+          <div><span class="lbl">Released</span><span class="val">Oct 2026</span></div>
         </div>
       </div>
       <div>
@@ -163,7 +162,7 @@
     <div class="steps" style="margin-top:18px">
       <div class="step"><div class="n">1</div><p>Use a name-brand microSD card: <b>SanDisk</b>, <b>Samsung</b> or <b>Kingston</b>. <b>32 GB or smaller</b> is easiest.</p></div>
       <div class="step"><div class="n">2</div><p>Format it as <b>FAT32</b>. exFAT, the usual format for 64 GB and larger cards, won't work. On Windows, cards over 32 GB can be formatted FAT32 from a command prompt, for example: <code>format X: /FS:FAT32 /Q /V:TEMPEST</code>, where <code>X:</code> is the card's drive letter.</p></div>
-      <div class="step"><div class="n">3</div><p>Copy the TEMPEST files supplied with your unit to the card, laid out like this:</p></div>
+      <div class="step"><div class="n">3</div><p>Download the <a href="https://github.com/OzInFl/tempest2-flasher/releases/download/sd-files-v1/tempest2-sd-card-files.zip"><b>TEMPEST 2 SD card files</b></a> (zip, 222 MB). Open the zip and copy <b>everything inside it</b> to the top level of the card, so the card looks like this:</p></div>
     </div>
     <div class="tree">customwords.txt      <span class="c">custom word list (Custom SD mode)</span>
 af/                  <span class="c">4.4K real-speech recordings</span>
@@ -198,7 +197,7 @@ TEMPESTdata.txt      <span class="c">created by the TEMPEST, your session log</s
   </section>
 
   <footer>
-    TEMPEST 2 · firmware v0.92 for M5Stack Core2 for AWS v1.3<br />
+    TEMPEST 2 · firmware v0.92<br />
     Flashing powered by <a href="https://esphome.github.io/esp-web-tools/" target="_blank" rel="noopener">ESP Web Tools</a>
   </footer>
 
