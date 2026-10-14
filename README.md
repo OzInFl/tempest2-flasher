@@ -16,7 +16,7 @@ Flashes the device from Chrome/Edge over USB (Web Serial) via
 |---|---|
 | `index.html` | Flasher page: install button, flashing steps, SD card setup/troubleshooting |
 | `manifest-tempest2.json` | ESP Web Tools manifest (ESP32, one merged image at `0x0`) |
-| `firmware/tempest2-v0.92.factory.bin` | Merged image: bootloader `0x1000`, partitions `0x8000`, boot_app0 `0xe000`, app `0x10000` |
+| `firmware/tempest2-v0.92-r2.factory.bin` | Merged image: bootloader `0x1000`, partitions `0x8000`, boot_app0 `0xe000`, app `0x10000` |
 | `firmware/firmware.bin` | App-only image for the on-device SD card update (`/firmware.bin` on the card) |
 | `.nojekyll` | Serve `firmware/` and `.json` verbatim |
 
@@ -28,7 +28,9 @@ to keep the repo and Pages site small. SHA-256 `62e69b633ed8eacd9283daa5a5ea495c
 
 | Version | Built from | factory.bin SHA-256 |
 |---|---|---|
-| 0.92 | `TEMPESTV2@398ace7` | `b18009bdf3f1768ae61ec3a4b78a9cdb2d87a55c3c041c6e5524903aad4d98cb` |
+| 0.92 (r2) | `TEMPESTV2@398ace7` | `77ec24319834afb3e85a44c79b6f6eba878560290ce5db68f7526e863f791f8e` |
+
+r2 fixes the first upload (r1), whose bootloader header said 4 MB flash: units flashed from the page stayed black.
 
 `firmware.bin` SHA-256: `192657cac6fa64f6f253ea677e3fc2e2e1721e93fc2618a034ef02ef99ba6e0d`
 
@@ -46,5 +48,13 @@ to keep the repo and Pages site small. SHA-256 `62e69b633ed8eacd9283daa5a5ea495c
    ```
    `<framework>` = `~/.platformio/packages/framework-arduinoespressif32@3.20003.220626`
    (Arduino core 2.0.3, platform `espressif32@5.0.0`).
+
+   **Then fix the flash-size byte.** The prebuilt bootloader's header says 4 MB and `merge_bin` will
+   not change it (the image carries a hash). PlatformIO's uploader patches it on the fly, the web
+   flasher does not, and with 4 MB the 16 MB partition table is rejected: the unit stays black and silent.
+   ```
+   python -c "p='firmware/tempest2-vX.YZ.factory.bin'; b=bytearray(open(p,'rb').read()); assert b[0x1003]==0x20; b[0x1003]=0x40; open(p,'wb').write(b)"
+   ```
+   (`0x40` = 16 MB, 40 MHz.) Verify by flashing one unit **from the page** before announcing a release.
 3. Copy `.pio/build/m5stack-core2/firmware.bin` to `firmware/firmware.bin`.
 4. Update `manifest-tempest2.json` (version + path), the version shown in `index.html`, and this table.
