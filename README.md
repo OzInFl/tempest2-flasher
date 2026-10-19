@@ -16,9 +16,9 @@ Flashes the device from Chrome/Edge over USB (Web Serial) via
 |---|---|
 | `index.html` | Flasher page: install button, flashing steps, SD card setup/troubleshooting |
 | `manifest-tempest2.json` | ESP Web Tools manifest (ESP32, one merged image at `0x0`) |
-| `firmware/tempest2-v0.92-r2.factory.bin` | Merged image: bootloader `0x1000`, partitions `0x8000`, boot_app0 `0xe000`, app `0x10000` |
+| `firmware/tempest2-v0.93.factory.bin` | Merged image: bootloader `0x1000`, partitions `0x8000`, boot_app0 `0xe000`, app `0x10000` |
 | `firmware/firmware.bin` | App-only image for the on-device SD card update (`/firmware.bin` on the card) |
-| `manual/TEMPEST2_User_Manual_v0.92.pdf` | User manual (built in `TEMPESTV2` by `tools/build_manual.py` from real device screenshots) |
+| `manual/TEMPEST2_User_Manual_v0.93.pdf` | User manual (built in `TEMPESTV2` by `tools/build_manual.py` from real device screenshots) |
 | `.nojekyll` | Serve `firmware/` and `.json` verbatim |
 
 SD card files (`customwords.txt` + `af/1.wav`..`af/4409.wav`, 222 MB zip) are a
@@ -29,11 +29,14 @@ to keep the repo and Pages site small. SHA-256 `62e69b633ed8eacd9283daa5a5ea495c
 
 | Version | Built from | factory.bin SHA-256 |
 |---|---|---|
-| 0.92 (r2) | `TEMPESTV2@398ace7` | `77ec24319834afb3e85a44c79b6f6eba878560290ce5db68f7526e863f791f8e` |
+| 0.93 | `TEMPESTV2@462dcc2` | `b42beb74b3a51a737348b79a06f813c68f2b7c01eb1f501890bd542fa744605d` |
+| 0.92 (r2, retired) | `TEMPESTV2@398ace7` | `77ec24319834afb3e85a44c79b6f6eba878560290ce5db68f7526e863f791f8e` |
 
-r2 fixes the first upload (r1), whose bootloader header said 4 MB flash: units flashed from the page stayed black.
+0.93: splash QR code to this site, Temp Change Alert 20-50 values fixed, E-field reading no longer a third low.
 
-`firmware.bin` SHA-256: `192657cac6fa64f6f253ea677e3fc2e2e1721e93fc2618a034ef02ef99ba6e0d`
+0.92 r2 fixed the first upload (r1), whose bootloader header said 4 MB flash: units flashed from the page stayed black.
+
+`firmware.bin` (0.93) SHA-256: `6b721c911b517ff7d9312d76af680f077625711624cc7f0ae267d7b402e2e1bd`
 
 ## Publishing a new release
 
