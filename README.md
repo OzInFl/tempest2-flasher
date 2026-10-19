@@ -18,6 +18,7 @@ Flashes the device from Chrome/Edge over USB (Web Serial) via
 | `manifest-tempest2.json` | ESP Web Tools manifest (ESP32, one merged image at `0x0`) |
 | `firmware/tempest2-v0.92-r2.factory.bin` | Merged image: bootloader `0x1000`, partitions `0x8000`, boot_app0 `0xe000`, app `0x10000` |
 | `firmware/firmware.bin` | App-only image for the on-device SD card update (`/firmware.bin` on the card) |
+| `manual/TEMPEST2_User_Manual_v0.92.pdf` | User manual (built in `TEMPESTV2` by `tools/build_manual.py` from real device screenshots) |
 | `.nojekyll` | Serve `firmware/` and `.json` verbatim |
 
 SD card files (`customwords.txt` + `af/1.wav`..`af/4409.wav`, 222 MB zip) are a

@@ -62,6 +62,7 @@
              background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 88%,white),var(--accent));
              box-shadow:0 6px 18px -6px var(--accent), inset 0 1px 0 rgba(255,255,255,.35); transition:transform .08s ease, box-shadow .15s ease}
   .card.sdcard{--accent:var(--cyan)}
+  .card.manual{--accent:var(--green)}
   a.flash-btn{display:block; text-align:center; text-decoration:none; color:#041417}
   .flash-btn:hover{transform:translateY(-1px); box-shadow:0 10px 24px -8px var(--accent)}
   .flash-btn:focus-visible{outline:2px solid var(--text); outline-offset:3px}
@@ -153,6 +154,25 @@
       <div>
         <a class="flash-btn dl" href="https://github.com/OzInFl/tempest2-flasher/releases/download/sd-files-v1/tempest2-sd-card-files.zip" download>Download SD card files</a>
         <span class="alt">Open the zip and copy everything inside it to the card.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card manual" aria-labelledby="man">
+    <div class="card-grid">
+      <div>
+        <span class="badge">User manual</span>
+        <h2 id="man">TEMPEST 2 User Manual</h2>
+        <p class="role">How to use every screen: Enviro readings and the temperature alert, the NRG word engine and its
+          seven modes, the E-field meter, settings, the SD card and troubleshooting. Pictures are taken from the unit itself.</p>
+        <div class="meta">
+          <div><span class="lbl">Format</span><span class="val">PDF, 12 pages</span></div>
+          <div><span class="lbl">Firmware</span><span class="val">v0.92</span></div>
+        </div>
+      </div>
+      <div>
+        <a class="flash-btn" href="manual/TEMPEST2_User_Manual_v0.92.pdf" target="_blank" rel="noopener">Open the manual</a>
+        <span class="alt"><a href="manual/TEMPEST2_User_Manual_v0.92.pdf" download>Download PDF</a> (260 KB)</span>
       </div>
     </div>
   </section>
